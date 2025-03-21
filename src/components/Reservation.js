@@ -3,7 +3,7 @@ import { NavLink, useNavigate, Link } from "react-router-dom";
 
 import { AuthContext } from "../context/AuthContext.js";
 
-import * as AuthService from '../services/AuthService.js';
+//import * as AuthService from '../services/AuthService.js';
 import Header from "./Header.js";
 
 function Reservation() {
@@ -14,17 +14,18 @@ function Reservation() {
   const [name, setName] = useState('');
   const [people, setPeople] = useState(1);
   const [specialRequest, setSpecialRequest] = useState('');
+  const [error, setError] = useState('');
   const [dateTime, setDateTime] = useState('');
 
 
   const reservationNandler = async (e) => {
     e.preventDefault();
-  
+
     if (!user) {
       alert('Моля влезте в профила си');
       navigate('/login');
     }
-  
+
     // Подготвям данните за резервацията
     const reservationData = {
       email,
@@ -33,7 +34,7 @@ function Reservation() {
       specialRequest,
       dateTime
     };
-  
+
     try {
       console.log(reservationData);
       // Извикваме метода за резервация от AuthService
@@ -42,24 +43,24 @@ function Reservation() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reservationData),
       });
-  
+
       const responseData = await response.json();
-  
+
       // Проверка на отговора от сървъра
       if (!response.ok) {
         throw new Error(responseData.error || `HTTP грешка ${response.status}`);
       }
-  
+
       // Ако е успешна резервацията, обаждаме се на функцията за актуализиране на състоянието
       reservation(responseData);
-      alert('Успешно направена резервация');
+      alert('Успешна резервация');
       navigate('/');
     } catch (error) {
       console.error("Error during reservation:", error);
-      alert('Неуспешна резервация: ' + error.message);
+      setError('Неуспешна резервация!');
     }
   };
-  
+
   return (
     <>
       <div className="container-xxl position-relative p-0" data-wow-delay="0.1s">
@@ -117,6 +118,7 @@ function Reservation() {
               <h1 className="text-white mb-4">Book A Table Online</h1>
 
               <form onSubmit={reservationNandler} method="POST">
+                {error && <div style={errorStyle}>{error}</div>}
                 <div className="row g-3">
                   <div className="col-md-6">
                     <div className="form-floating">
@@ -223,5 +225,14 @@ function Reservation() {
     </>
   )
 }
+
+const errorStyle = {
+  color: '#D8000C',
+  backgroundColor: '#FFBABA',
+  padding: '10px',
+  borderRadius: '5px',
+  marginBottom: '15px',
+  textAlign: 'center',
+};
 
 export default Reservation;

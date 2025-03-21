@@ -7,6 +7,7 @@ import '../../App.css';
 function Contact() {
   const [verified, setVerified] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -70,7 +71,7 @@ function Contact() {
 
     } catch (error) {
       console.error("Грешка:", error);
-      alert(`Грешка при изпращане: ${error.message}`);
+      setError('Възникна грешка при изпращането на съобщението!');
     }
   };
 
@@ -98,7 +99,7 @@ function Contact() {
 
           <div className="container-xxl py-5 hero-header mb-5">
             <h4 className="section-title ff-secondary text-start text-primary fw-normal mb-4">Contact</h4>
-            <p className="mb-2"><i className="fa fa-map-marker-alt me-3"></i>Plovdiv</p>
+            <p className="mb-2"><i className="fa fa-map-marker-alt me-3"></i>Bulgaria</p>
             <p className="mb-2"><i className="fa fa-phone-alt me-3"></i>+359 875439160</p>
             <p className="mb-2"><i className="fa fa-envelope me-3"></i>stilianmihnev@gmail.com</p>
             <div className="button">
@@ -119,13 +120,14 @@ function Contact() {
               </div>
             ) : (
               <form className="contact-form" onSubmit={handleSubmit}>
+                {error && <div className="text-red-500">{error}</div>}
                 <label>
                   Name
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
-                    placeholder="Вашето име"
+                    placeholder="Your name"
                     required
                     onChange={handleChange}
                   />
@@ -136,7 +138,7 @@ function Contact() {
                     type="email"
                     name="email"
                     value={formData.email}
-                    placeholder="Вашият email"
+                    placeholder="Your email"
                     onChange={handleChange}
                     required
                   />
@@ -148,7 +150,7 @@ function Contact() {
                     name="phone"
                     pattern="[0-9]{10}"
                     value={formData.phone}
-                    placeholder="Вашият телефон"
+                    placeholder="Your number"
                     onChange={handleChange}
                   />
                 </label>
@@ -157,7 +159,7 @@ function Contact() {
                   <textarea
                     name="message"
                     value={formData.message}
-                    placeholder="Вашето съобщение..."
+                    placeholder="Your message"
                     onChange={handleChange}
                     required
                     rows="5"

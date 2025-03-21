@@ -19,9 +19,6 @@ export const saveMessage = async (req, res) => {
       phone: phone?.trim() || "", 
       message: message.trim()
     });
-    console.log('sasasasa')
-
-    console.log(newMessage)
 
     await newMessage.save();
     
